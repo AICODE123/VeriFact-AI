@@ -1,0 +1,18 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.venv/
+*.egg-info/
+
+# Runtime data (regenerate via data/load_seed_data.py and app usage)
+data/history.db
+data/offline_facts.db
+
+# Logs
+logs/*.log*
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

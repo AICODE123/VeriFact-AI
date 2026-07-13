@@ -1,0 +1,208 @@
+# =============================================================================
+# VeriFact AI — Application Configuration
+# =============================================================================
+# Central configuration file. Nothing in the codebase should hardcode values
+# that belong here (model names, thresholds, trusted domains, paths, etc).
+# =============================================================================
+
+app:
+  name: "VeriFact AI"
+  version: "1.0.0"
+  description: "AI-powered explainable fact verification assistant"
+
+# -----------------------------------------------------------------------------
+# NLP / AI Models
+# -----------------------------------------------------------------------------
+models:
+  spacy_model: "en_core_web_sm"
+
+  # Lightweight, CPU-friendly sentence embedding model used for semantic
+  # similarity search between the claim and retrieved evidence chunks.
+  embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
+
+  # Compact pretrained Natural Language Inference model. Given a
+  # (premise, hypothesis) pair it returns entailment / contradiction / neutral
+  # probabilities. Small enough to run comfortably on a laptop CPU.
+  nli_model: "cross-encoder/nli-deberta-v3-small"
+
+  # Max sequence length fed into the NLI model per (premise, hypothesis) pair
+  nli_max_length: 256
+
+# -----------------------------------------------------------------------------
+# Search configuration
+# -----------------------------------------------------------------------------
+search:
+  max_results: 8
+  max_pages_to_scrape: 5
+  request_timeout_seconds: 8
+  user_agent: "VeriFactAI/1.0 (School AI Exhibition Project; educational use)"
+
+  # Only results whose domain matches one of these (or is a subdomain of one)
+  # are considered "trusted" and eligible for evidence retrieval.
+  # Add more entries here to widen the search — e.g. "forbes.com", "nytimes.com",
+  # or a broad suffix like ".org" to trust all .org sites.
+  trusted_domains:
+    # General Reference
+    - "wikipedia.org"
+    - "britannica.com"
+
+    # Government
+    - ".gov"
+    - ".edu"
+    - ".org"
+    - "usa.gov"
+    - "gov.uk"
+    - "india.gov.in"
+    - "data.gov"
+    - "census.gov"
+    - "weather.gov"
+    - "noaa.gov"
+
+    # Health & Medicine
+    - "who.int"
+    - "nih.gov"
+    - "cdc.gov"
+    - "mayoclinic.org"
+    - "clevelandclinic.org"
+    - "medlineplus.gov"
+    - "fda.gov"
+    - "ema.europa.eu"
+    - "nhs.uk"
+    - "hopkinsmedicine.org"
+
+    # Space & Astronomy
+    - "nasa.gov"
+    - "esa.int"
+    - "isro.gov.in"
+    - "jpl.nasa.gov"
+    - "space.com"
+
+    # Science & Research
+    - "nature.com"
+    - "science.org"
+    - "scientificamerican.com"
+    - "sciencedaily.com"
+    - "sciencedirect.com"
+    - "springer.com"
+    - "springernature.com"
+    - "ieee.org"
+    - "acm.org"
+    - "arxiv.org"
+    - "pubmed.ncbi.nlm.nih.gov"
+    - "ncbi.nlm.nih.gov"
+    - "cell.com"
+    - "pnas.org"
+
+  # International Organizations
+    - "un.org"
+    - "unesco.org"
+    - "unicef.org"
+    - "worldbank.org"
+    - "imf.org"
+    - "oecd.org"
+    - "wto.org"
+    - "fao.org"
+    - "ipcc.ch"
+
+    # Environment & Climate
+    - "epa.gov"
+    - "climate.gov"
+    - "iucn.org"
+
+    # Economics & Statistics
+    - "fred.stlouisfed.org"
+    - "bea.gov"
+    - "bls.gov"
+    - "ourworldindata.org"
+
+    # History & Culture
+    - "history.com"
+    - "smithsonianmag.com"
+    - "loc.gov"
+    - "archives.gov"
+
+    # Technology
+    - "developer.mozilla.org"
+    - "w3.org"
+    - "python.org"
+    - "openai.com"
+
+    # Fact Checking
+    - "snopes.com"
+    - "factcheck.org"
+    - "politifact.com"
+    - "fullfact.org"
+
+    # Reputable News
+    - "reuters.com"
+    - "apnews.com"
+    - "bbc.com"
+    - "npr.org"
+    - "pbs.org"
+    - "abcnews.go.com"
+    - "cbsnews.com"
+    - "nytimes.com"
+    - "washingtonpost.com"
+    - "theguardian.com"
+    - "economist.com"
+
+    # Academic Search
+    - "scholar.google.com"
+    - "semanticscholar.org"
+    - "crossref.org"
+  # If true, the domain allowlist above is ignored entirely and ANY search
+  # result is treated as usable evidence. This trades reliability for
+  # breadth — use with caution, since it removes the "trusted sources only"
+  # guarantee the project spec calls for.
+  disable_domain_filter: false
+
+# -----------------------------------------------------------------------------
+# Evidence retrieval / chunking
+# -----------------------------------------------------------------------------
+retrieval:
+  chunk_size_words: 120
+  chunk_overlap_words: 20
+  top_k_chunks: 5
+  min_chunk_words: 15
+
+# -----------------------------------------------------------------------------
+# Verification decision thresholds
+# -----------------------------------------------------------------------------
+verification:
+  # Minimum semantic similarity for a chunk to be considered relevant enough
+  # to even run through NLI (0-1 cosine similarity scale)
+  min_similarity_threshold: 0.35
+
+  # Minimum aggregated confidence (0-1) required to declare Supported/
+  # Contradicted. Below this, the claim is marked Insufficient Evidence.
+  min_confidence_threshold: 0.55
+
+  # Minimum number of relevant evidence chunks required before a definitive
+  # (non "Insufficient Evidence") decision can be made.
+  min_evidence_chunks: 1
+
+# -----------------------------------------------------------------------------
+# Storage
+# -----------------------------------------------------------------------------
+storage:
+  history_db_path: "data/history.db"
+  offline_kb_db_path: "data/offline_facts.db"
+
+# -----------------------------------------------------------------------------
+# Logging
+# -----------------------------------------------------------------------------
+logging:
+  log_dir: "logs"
+  log_file: "verifact.log"
+  level: "INFO"
+  max_bytes: 1048576   # 1 MB
+  backup_count: 3
+
+# -----------------------------------------------------------------------------
+# UI
+# -----------------------------------------------------------------------------
+ui:
+  page_title: "VeriFact AI"
+  page_icon: "🔍"
+  layout: "wide"
+  max_history_items: 50
