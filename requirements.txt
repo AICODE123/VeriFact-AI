@@ -1,15 +1,20 @@
 # VeriFact AI — Python dependencies
-# Tested on Python 3.12+
+# Tested on Python 3.12
 
 # --- Frontend ---
 streamlit==1.38.0
 
+# --- Core numerical libraries (pin first) ---
+numpy==1.26.4
+scipy==1.13.1
+
 # --- AI / NLP ---
+torch==2.4.0
 transformers==4.44.2
 sentence-transformers==3.0.1
 spacy==3.7.5
+thinc==8.2.5
 scikit-learn==1.5.1
-torch==2.4.0
 
 # --- Search & scraping ---
 ddgs==9.14.4
@@ -29,6 +34,5 @@ fpdf2==2.7.9
 pytest==8.3.2
 pytest-mock==3.14.0
 
-# --- After installing requirements, download the spaCy model with:
-# python -m spacy download en_core_web_sm
+# --- spaCy English model ---
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
