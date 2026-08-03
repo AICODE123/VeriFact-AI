@@ -6,8 +6,6 @@ venv/
 *.egg-info/
 
 # Runtime data (regenerate via data/load_seed_data.py and app usage)
-data/history.db
-data/offline_facts.db
 
 # Logs
 logs/*.log*
